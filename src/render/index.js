@@ -156,7 +156,7 @@ export class RenderSystem {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NoToneMapping; // we tonemap in the composite
     renderer.shadowMap.enabled = true; // for spot/point lights owned by others
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.shadowMap.autoUpdate = true;
     renderer.setClearColor(0x000000, 1);
     this.renderer = renderer;

@@ -161,7 +161,7 @@ export class MaterialPatcher {
           // out warmer than the sun that cast them.
           // Occluded with sqrt(AO), never AO: a fill term that AO can drive to
           // zero is not a fill, it is just another way to make a black hole.
-          vec3 owWN = inverseTransformDirection( normal, viewMatrix );
+          vec3 owWN = transformNormalByInverseViewMatrix( normal, viewMatrix );
           float owFillAo = sqrt( max( owAo, 0.0 ) );
           float owUp = clamp( owWN.y, -1.0, 1.0 );
           // Cosine-hemisphere visibility of the sky, not a narrow smoothstep:
