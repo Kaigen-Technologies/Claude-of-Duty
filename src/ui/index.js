@@ -13,6 +13,7 @@ import { WorldMarkers } from './markers.js';
 import { Prompt, Banner } from './prompts.js';
 import { PauseMenu } from './menu.js';
 import { CombatDemo } from './demo.js';
+import { FpsCounter } from './fps.js';
 
 const MAX_BLIPS = 48;
 
@@ -91,6 +92,12 @@ export class UiSystem {
     this.prompt = new Prompt(this.chromeLayer);
     this.banner = new Banner(this.chromeLayer);
     this.menu = new PauseMenu(this.root, ctx);
+    // Wall-clock readout: off in capture mode, where the pixel gate needs identical frames; ?fps=1 forces it on.
+    const fpsParam = new URLSearchParams(location.search).get('fps');
+    this.fps = new FpsCounter(this.root);
+    this.fpsOn = fpsParam !== null ? fpsParam === '1' : !ctx.config.deterministic;
+    this.fps.setVisible(this.fpsOn);
+    this.root.classList.toggle('has-fps', this.fpsOn);
 
     this.health.onBeat = (i) => this.sfx('heartbeat', 0.35 + i * 0.5);
 
@@ -399,6 +406,7 @@ export class UiSystem {
   /* -------------------------------------------------------------- frame --- */
 
   lateUpdate(dt, ctx) {
+    if (this.fpsOn) this.fps.update(performance.now());
     const t = ctx.time;
     const rawDt = clamp(t.raw - this._lastRaw, 0, 0.1);
     this._lastRaw = t.raw;

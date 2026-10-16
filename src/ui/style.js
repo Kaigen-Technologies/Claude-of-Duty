@@ -597,6 +597,41 @@ const CSS = `
   background: linear-gradient(to right, transparent, rgba(255,255,255,.5), transparent);
 }
 
+/* ========================================================= frame counter */
+/* The HZ build's readout (cod_hud_top.c): same box, type sizes and thresholds,
+   drawn over the pause menu so a capture always carries it. */
+.ow-fps {
+  position:absolute; right:var(--pad); top:var(--pad); z-index:2;
+  width: calc(210px * var(--k)); height: calc(112px * var(--k));
+  padding: calc(8px * var(--k)) calc(16px * var(--k)) calc(10px * var(--k));
+  display:flex; flex-direction:column; align-items:flex-end; justify-content:center;
+  background: rgba(5,9,12,.72);
+  border-radius: calc(4px * var(--k));
+  border-right: calc(3px * var(--k)) solid var(--fps-accent);
+  box-shadow: 0 calc(2px * var(--k)) calc(10px * var(--k)) rgba(0,0,0,.3);
+  --fps-tone: var(--ink); --fps-accent: var(--cyan);
+}
+.ow-fps[data-tone="warn"] { --fps-tone: var(--amber); --fps-accent: var(--amber); }
+.ow-fps[data-tone="bad"]  { --fps-tone: var(--red);   --fps-accent: var(--red); }
+.ow-fps-row { display:flex; align-items:flex-end; gap: calc(8px * var(--k)); }
+.ow-fps-n {
+  font-family: var(--fd); font-size: calc(66px * var(--k)); font-weight:700; line-height:1;
+  letter-spacing:.02em; color: var(--fps-tone); text-shadow: var(--sh-o2);
+  font-variant-numeric: tabular-nums;
+}
+.ow-fps-l {
+  font-family: var(--fd); font-size: calc(22px * var(--k)); font-weight:700; line-height:1;
+  letter-spacing:.2em; color: var(--ink-2); text-shadow: var(--sh-o1);
+  padding-bottom: calc(10px * var(--k));
+}
+.ow-fps-ms {
+  font-family: var(--fm); font-size: calc(22px * var(--k)); font-weight:600; line-height:1.1;
+  letter-spacing:.04em; color: var(--fps-tone); text-shadow: var(--sh-o1);
+  font-variant-numeric: tabular-nums;
+}
+/* the HZ build drops the killfeed below the counter */
+.ow-hud.has-fps .ow-killfeed { top: calc(var(--pad) + 124px * var(--k)); }
+
 /* ================================================================== menu */
 .ow-menu {
   position:absolute; inset:0; pointer-events:auto;
