@@ -15,6 +15,7 @@ import { AudioSystem } from './audio/index.js';
 
 import { installShotApi } from './dev/shots.js';
 import { prewarm } from './core/prewarm.js';
+import { pickStartQuality } from './core/autoquality.js';
 
 const params = new URLSearchParams(location.search);
 const capture = params.get('capture') === '1';
@@ -24,12 +25,14 @@ const capture = params.get('capture') === '1';
 // free-run. See the long comment in src/dev/shots.js.
 const lockstep = capture && params.get('lockstep') === '1';
 
-const config = createConfig({
-  quality: params.get('q') ?? 'ultra',
-  deterministic: capture,
-});
-
 const canvas = document.getElementById('game');
+
+// the HZ build's start rules pick the preset; ?q= overrides, and the capture harness keeps its Ultra references
+const auto = await pickStartQuality(canvas);
+const quality = params.get('q') ?? (capture ? 'ultra' : auto.quality);
+console.info(`[quality] ${quality} (auto pick ${auto.quality}: ${auto.reason})`);
+const config = createConfig({ quality, deterministic: capture });
+config.autoQuality = auto.quality;
 
 const engine = new Engine({ canvas, config });
 
